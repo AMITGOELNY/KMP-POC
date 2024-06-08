@@ -1,9 +1,13 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.sqldelight)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -51,6 +55,21 @@ kotlin {
     }
 }
 
+dependencies {
+    add("kspCommonMainMetadata", "io.insert-koin:koin-ksp-compiler:1.3.0")
+//    add("kspJvm", "io.insert-koin:koin-ksp-compiler:1.3.0")
+}
+
+tasks.withType<KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+}
+
 android {
     namespace = "com.amit.kmp.poc.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -60,5 +79,24 @@ android {
     }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+}
+
+sqldelight {
+    databases {
+        create("KmpPocDb") {
+            packageName.set("com.amit.kmp.poc.shared")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
+        }
+    }
+    linkSqlite.set(true)
+}
+
+kover {
+    filters {
+        classes {
+            excludes += listOf()
+        }
     }
 }
