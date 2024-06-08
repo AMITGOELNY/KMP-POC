@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.amit.kmp.poc.shared.greeting.Greeting
 import kmp_rccl_poc.composeapp.generated.resources.Res
 import kmp_rccl_poc.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
