@@ -1,28 +1,40 @@
 import SwiftUI
 import Shared
 
+extension FeedState: Identifiable { }
+extension FeedItem: Identifiable { }
+
 struct ContentView: View {
-    @State private var showContent = false
+    @StateObject var viewModelStoreOwner = SharedViewModelStoreOwner<FeedViewModel>()
+    
     var body: some View {
         VStack {
-            Button("Click me!") {
-                withAnimation {
-                    showContent = !showContent
+            NavigationView {
+                VStack(spacing: 0) {
+                    Observing(viewModelStoreOwner.instance.state) { state in
+                        switch onEnum(of: state.feed) {
+                        case .loading:
+                            Text("loading")
+                        case .empty:
+                            Text("empty")
+                        case .error:
+                            Text("error")
+                        case .loaded(let success):
+                            List(success.data?.items ?? []) { item in
+                                Text(item.title)
+                            }
+                            .listStyle(.plain)
+                            .navigationBarTitle(Text("Trending News"))
+                            .onAppear {
+                                UITableView.appearance().separatorStyle = .none
+                            }
+                        }
+                    }
                 }
-            }
-
-            if showContent {
-                VStack(spacing: 16) {
-                    Image(systemName: "swift")
-                        .font(.system(size: 200))
-                        .foregroundColor(.accentColor)
-                    Text("SwiftUI: \(Greeting().greet())")
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                .padding()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding()
     }
 }
 
