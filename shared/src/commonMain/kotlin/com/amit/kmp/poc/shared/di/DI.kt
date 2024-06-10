@@ -30,6 +30,12 @@ fun initKoin(appModule: () -> Module): KoinApplication =
         }
     }
 
+// called by iOS etc
+fun iniIosKoin() =
+    initKoin(
+        appModule = { module { } },
+    )
+
 @org.koin.core.annotation.Module
 @ComponentScan("com.amit.kmp.poc.shared.data.repository")
 class RepositoryModule

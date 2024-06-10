@@ -16,7 +16,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Single
 
-private const val BASE_URL = "138.197.84.104"
+private const val BASE_URL = "footballnewsapi.netlify.app"
 
 @Single([ApiClient::class])
 internal class ApiClient(
@@ -42,7 +42,7 @@ internal class ApiClient(
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 url {
-                    protocol = URLProtocol.HTTP
+                    protocol = URLProtocol.HTTPS
                     host = BASE_URL
                 }
             }
