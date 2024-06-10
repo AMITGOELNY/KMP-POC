@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.sqldelight)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
+    id("co.touchlab.skie")
 }
 
 kotlin {
@@ -24,6 +25,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
+            export(libs.androidx.lifecycle.viewmodel)
             baseName = "Shared"
             isStatic = true
         }
@@ -34,18 +36,22 @@ kotlin {
             implementation(libs.datetime)
             implementation(libs.kermit)
 
-            api(libs.koinCore)
-            api(libs.koinCompose)
-            implementation(libs.koinAnnotations)
-
+            implementation(libs.kotlinx.coroutines.core)
+            api(libs.androidx.lifecycle.viewmodel)
             implementation(libs.bundles.commonKtor)
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.sqldelight.coroutines)
+
+            api(libs.koinCore)
+            api(libs.koinCompose)
+            implementation(libs.koinAnnotations)
         }
 
         androidMain.dependencies {
             implementation(libs.android.sqldelight.driver)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
         }
 
         iosMain.dependencies {
@@ -55,12 +61,18 @@ kotlin {
     }
 }
 
+skie {
+    features {
+        enableSwiftUIObservingPreview = true
+    }
+}
+
 dependencies {
     add("kspCommonMainMetadata", "io.insert-koin:koin-ksp-compiler:1.3.0")
 //    add("kspJvm", "io.insert-koin:koin-ksp-compiler:1.3.0")
 }
 
-tasks.withType<KotlinCompile<*>>().configureEach {
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
     if (name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }

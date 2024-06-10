@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kover)
+    id("co.touchlab.skie") version "0.8.2" apply false
 }
 
 subprojects {
