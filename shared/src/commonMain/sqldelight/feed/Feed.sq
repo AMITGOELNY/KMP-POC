@@ -1,0 +1,21 @@
+CREATE TABLE feed (
+    url TEXT NOT NULL PRIMARY KEY,
+    image TEXT NOT NULL,
+    title TEXT NOT NULL,
+    site TEXT NOT NULL
+);
+
+insertFeed:
+INSERT OR
+REPLACE INTO
+feed(url, image, title, site)
+VALUES ?;
+
+getFeedById:
+SELECT * FROM feed WHERE url = ?;
+
+getFeed:
+SELECT * FROM feed;
+
+clear:
+DELETE FROM feed;
