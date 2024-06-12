@@ -62,6 +62,7 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test-common"))
             implementation(kotlin("test-annotations-common"))
+            implementation(libs.bundles.commonTest)
         }
     }
 }
@@ -75,6 +76,18 @@ skie {
 dependencies {
     add("kspCommonMainMetadata", "io.insert-koin:koin-ksp-compiler:1.3.0")
 //    add("kspJvm", "io.insert-koin:koin-ksp-compiler:1.3.0")
+}
+
+dependencies {
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, libs.mockativeProcessor)
+        }
+}
+
+ksp {
+    arg("mockative.stubsUnitByDefault", "true")
 }
 
 tasks.withType<KotlinCompilationTask<*>>().configureEach {

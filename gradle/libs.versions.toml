@@ -7,6 +7,14 @@ commonKtor = [
     "ktor-client-serialization"
 ]
 
+commonTest = [
+    "coroutinesTest",
+    "koinTest",
+    "kotest",
+    "mockative",
+    "turbine"
+]
+
 [versions]
 agp = "8.2.0"
 android-compileSdk = "34"
@@ -23,6 +31,7 @@ compose-plugin = "1.6.10"
 coilVersion = "3.0.0-alpha04"
 
 junit = "4.13.2"
+mockativeVersion = "2.0.1"
 kotlin = "2.0.0"
 
 koinVersion = "3.5.3"
@@ -78,6 +87,12 @@ ktor-client-negotiation = { module = "io.ktor:ktor-client-content-negotiation", 
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
 
 # test
+coroutinesTest = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesCore" }
+koinTest = { module = "io.insert-koin:koin-test", version.ref = "koinVersion" }
+kotest = { module = "io.kotest:kotest-assertions-core", version = "5.8.0" }
+mockative = { module = "io.mockative:mockative", version.ref = "mockativeVersion" }
+mockativeProcessor = { module = "io.mockative:mockative-processor", version.ref = "mockativeVersion" }
+turbine = { module = "app.cash.turbine:turbine", version = "1.0.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
