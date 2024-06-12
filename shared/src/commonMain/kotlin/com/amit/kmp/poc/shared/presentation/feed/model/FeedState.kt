@@ -14,6 +14,12 @@ sealed interface FeedActions {
     data object Refresh : FeedActions
 
     data class OnTabItemClick(val index: Int) : FeedActions
+
+    data class OnFeedItemClick(val url: String) : FeedActions
+}
+
+sealed interface FeedEffects {
+    data class OnOpenWebView(val url: String) : FeedEffects
 }
 
 data class FeedsContainer(

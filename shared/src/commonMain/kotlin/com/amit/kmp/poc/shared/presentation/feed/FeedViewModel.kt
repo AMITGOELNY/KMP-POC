@@ -9,14 +9,19 @@ import com.amit.kmp.poc.shared.domain.usecase.FeedUseCase
 import com.amit.kmp.poc.shared.domain.usecase.FetchFeedUseCase
 import com.amit.kmp.poc.shared.presentation.LoadableDataState
 import com.amit.kmp.poc.shared.presentation.feed.model.FeedActions
+import com.amit.kmp.poc.shared.presentation.feed.model.FeedEffects
 import com.amit.kmp.poc.shared.presentation.feed.model.FeedState
 import com.amit.kmp.poc.shared.presentation.feed.model.FeedsContainer
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -33,6 +38,11 @@ class FeedViewModel(
     val state = _state.asStateFlow()
 
     private val viewStateTrigger = MutableSharedFlow<FeedActions>(replay = 1)
+
+    private val _effects = Channel<FeedEffects>()
+    val effect = _effects
+        .receiveAsFlow()
+        .shareIn(viewModelScope, SharingStarted.Eagerly)
 
     init {
         viewStateTrigger
@@ -60,6 +70,7 @@ class FeedViewModel(
         when (action) {
             FeedActions.Init, FeedActions.Refresh -> getFeed()
             is FeedActions.OnTabItemClick -> _state.update { it.copy(tabIndex = action.index) }
+            is FeedActions.OnFeedItemClick -> _effects.send(FeedEffects.OnOpenWebView(action.url))
         }
     }
 

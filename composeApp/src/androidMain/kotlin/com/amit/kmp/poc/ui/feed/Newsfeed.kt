@@ -12,23 +12,38 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.amit.kmp.poc.shared.presentation.LoadableDataState
 import com.amit.kmp.poc.shared.presentation.feed.FeedViewModel
+import com.amit.kmp.poc.shared.presentation.feed.model.FeedActions
+import com.amit.kmp.poc.shared.presentation.feed.model.FeedEffects
 import com.amit.kmp.poc.ui.shared.LoadingAnimation
 import com.amit.kmp.poc.ui.theme.Dimens
 import org.koin.compose.koinInject
 
 @Composable
-fun Newsfeed(viewModel: FeedViewModel = koinInject()) {
+fun Newsfeed(
+    viewModel: FeedViewModel = koinInject(),
+    onOpenWebView: (String) -> Unit,
+) {
     val feedState = viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is FeedEffects.OnOpenWebView -> onOpenWebView(effect.url)
+            }
+        }
+    }
 
     AnimatedContent(
         targetState = feedState.value.feed,
         transitionSpec = { fadeIn(tween(3000)) togetherWith fadeOut(tween(3000)) },
-        label = "Animated Content"
+        label = "Animated Content",
+        contentKey = { it::class.simpleName }
     ) { targetState ->
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -41,7 +56,8 @@ fun Newsfeed(viewModel: FeedViewModel = koinInject()) {
                     NewsItemList(
                         feed = targetState.data,
                         selectedFeed = targetState.data.items,
-                        onFeedItemClick = { // TODO
+                        onFeedItemClick = {
+                            viewModel.dispatch(FeedActions.OnFeedItemClick(it))
                         }
                     )
 

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
 }
 
 kotlin {
@@ -21,6 +22,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.navigation.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -31,6 +33,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
 
+            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
