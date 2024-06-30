@@ -52,6 +52,9 @@ kotlin {
             implementation(libs.android.sqldelight.driver)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+
+            implementation("org.drewcarlson:client-core:1.0.0-SNAPSHOT")
+            implementation("org.drewcarlson:network-client-ktor:1.0.0-SNAPSHOT")
         }
 
         iosMain.dependencies {

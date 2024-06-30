@@ -28,5 +28,16 @@ dependencyResolutionManagement {
     }
 }
 
+buildscript {
+    repositories {
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    }
+    dependencies {
+        classpath("org.drewcarlson:gradle-plugin:1.0.0-SNAPSHOT")
+    }
+}
+
+apply(plugin = "org.drewcarlson.kmp-test-bench-settings")
+
 include(":composeApp")
 include(":shared")

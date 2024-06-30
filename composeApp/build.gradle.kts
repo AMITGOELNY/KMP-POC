@@ -33,7 +33,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(projects.shared)
 
-            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+           api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
             implementation(libs.coil.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.network)

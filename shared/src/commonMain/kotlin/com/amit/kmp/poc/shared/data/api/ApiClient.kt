@@ -1,6 +1,7 @@
 package com.amit.kmp.poc.shared.data.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.plugins.addDefaultResponseValidation
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
@@ -25,6 +26,8 @@ internal class ApiClient(
 ) {
     val http =
         httpClient.config {
+
+
             install(Logging) {
                 logger = Logger.SIMPLE
                 level = LogLevel.BODY
@@ -58,9 +61,13 @@ internal class ApiClient(
 //                }
                 }
             }
+
+            config(this)
         }
 
 //    fun storeToken(token: String) {
 //        preferenceManager[Preferences.USER_TOKEN_KEY] = token
 //    }
 }
+
+expect fun config(httpClientConfig: HttpClientConfig<*>)

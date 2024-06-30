@@ -36,3 +36,5 @@ tasks.register("clean", Delete::class) {
 afterEvaluate {
     tasks["clean"].dependsOn(tasks.getByName("addKtlintFormatGitPreCommitHook"))
 }
+
+apply(plugin = "org.drewcarlson.kmp-test-bench")
